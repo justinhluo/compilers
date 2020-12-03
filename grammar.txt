@@ -1,0 +1,72 @@
+	
+program -> function program | epsilon
+
+function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS decloop END_PARAMS BEGIN_LOCALS decloop END_LOCALS BEGIN_BODY stateloop END_BODY
+
+decloop -> declaration SEMICOLON decloop | epsilon
+
+stateloop -> statement SEMICOLON stateloop | statement SEMICOLON
+
+declaration -> identloop COLON decarray INTEGER
+
+ident -> pident COMMA identloop | pident
+
+pident -> IDENT
+
+decarray -> ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
+
+statement -> statevar | stateif | statewhile | statedo | statefor | stateread | statewrite | statecontinue | statereturn
+
+statevar -> var ASSIGN expression
+
+stateif -> IF boolexp THEN stateloop stateelse ENDIF
+
+stateelse -> ELSE stateloop | epsilon
+
+statewhile -> WHILE boolexp BEGINLOOP stateloop ENDLOOP
+
+statedo -> BEGINLOOP stateloop ENDLOOP WHILE boolexp
+
+statefor -> var ASSIGN NUMBER SEMICOLON boolexp SEMICOLON var ASSIGN expression BEGINLOOP stateloop ENDLOOP
+
+stateread -> READ varloop
+
+varloop -> var COMMA varloop | var COMMA
+
+statewrite -> WRTIE varloop
+
+statecontinue -> CONTINUE
+
+statereturn -> RETURN expression
+
+boolexp -> relandexp | relandexp OR boolexp
+
+relandexp -> relexp | relexp AND relandexp
+
+relexp -> NOT rel_exp | rel_exp
+
+rel_exp -> relexp2 | TRUE | FALSE | relexp3
+
+relexp2 -> expression comp expression
+
+relexp3 -> L_PAREN boolexp R_PAREN
+
+comp -> EQ | NEQ | LT | GT | LTE | GTE
+
+expression -> multexp | SUB multexp expression | ADD multexp expression
+
+multexp -> term | term MULT multexp | term DIV multexp | term MOD multexp
+
+term -> term1 | term2
+
+term1 -> SUB term3 | term3
+
+term3 -> var | NUMBER | term4
+
+term4 -> L_PAREN expression R_PAREN
+
+term2 -> IDENT L_PAREN exploop
+
+exploop -> expression COMMA exploop | expression | epsilon
+
+var -> pident | pident L_SQUARE_BRACKET expression R_SQUARE_BRACKET
